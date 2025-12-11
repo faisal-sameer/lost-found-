@@ -1,66 +1,173 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# نظام إدارة الأغراض المفقودة للحجاج والمعتمرين (Lost & Found Prototype)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+نظام تجريبي (Prototype) لتسجيل الأغراض المفقودة في نقاط استلام محددة (في مكة والمدينة مثلًا)،
+وإتاحة واجهة سهلة للحاج/المعتمر للبحث عن غرضه المفقود باستخدام **الباركود** أو **رقم الجوال**،
+مع وجود واجهة خاصة بالأدمن لإدارة النقاط والأغراض وطلبات الاستلام.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🧑‍🏫 الفكرة العامة
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. عند تسجيل الحاج/المعتمر يتم ربطه بسوار أو بطاقة تحتوي على **باركود**.
+2. عند العثور على غرض ضائع:
+    - الموظف في نقطة الاستلام يسجّل الغرض ويحدد النقطة.
+    - يمكن ربط الغرض ببيانات صاحب الغرض (جوال / هوية) إن توفرت.
+3. صاحب الغرض الضائع يدخل على واجهة البحث:
+    - إمّا يكتب رقم الباركود الموجود على السوار/الحقيبة.
+    - أو يبحث برقم جواله.
+4. في حال إيجاد الغرض:
+    - يقدر يقدّم **طلب استلام إلكتروني (Claim Request)**.
+    - يظهر له **كود طلب** يقدمه للموظف عند الحضور للنقطة.
+    - يمكنه عرض **موقع نقطة الاستلام على الخريطة** (Google Maps Embed).
+5. الأدمن يملك لوحة بسيطة:
+    - إدارة نقاط الاستلام.
+    - تسجيل الأغراض المفقودة.
+    - متابعة جميع الأغراض وطلبات الاستلام وحالتها.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🛠️ التقنيات المستخدمة
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   **Laravel** (API بسيطة للأغراض، النقاط، طلبات الاستلام).
+-   **Vue 3 via CDN** لواجهة المستخدم في صفحة واحدة (Single Page Prototype).
+-   **Tailwind CSS** لتنسيق الواجهة بشكل سريع وعصري.
+-   **Google Maps Embed** لعرض موقع نقطة الاستلام على الخريطة.
+-   (مستقبلاً) تكامل مع **SMS Gateway** لإرسال رسائل لصاحب الغرض.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🧭 تدفّق الاستخدام (User Flow)
 
-## Laravel Sponsors
+### 1️⃣ واجهة صاحب الغرض الضائع (البحث)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### لقطة الشاشة (685)
 
-### Premium Partners
+صاحب الغرض الضائع يقدر:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+-   إدخال **رمز الباركود** الموجود على:
+    -   السوار
+    -   الحقيبة
+    -   أو أي ملصق مرتبط به.
+-   أو البحث باستخدام **رقم الجوال** (إن تم تسجيله سابقًا).
 
-## Contributing
+> صورة:
+> ![واجهة البحث بالباركود/الجوال](<screenshots/لقطة%20الشاشة%20(685).png>)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+### 2️⃣ ظهور نتيجة البحث + طلب الاستلام
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### لقطة الشاشة (686)
 
-## Security Vulnerabilities
+بعد الضغط على زر **بحث**:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+-   تظهر بطاقة الغرض إن وُجدت.
+-   يظهر **حالة الغرض** (موجود في نقطة الاستلام).
+-   زر **طلب استلام هذا الغرض**:
 
-## License
+    -   ينشئ **كود طلب استلام** مثل: `2NSFQML3`.
+    -   هذا الكود يقدمه صاحب الغرض للموظف عند الحضور.
+    -   _مستقبلاً:_ يتم إرسال **SMS** لصاحب الغرض يحتوي:
+        -   كود الطلب
+        -   اسم نقطة الاستلام.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   زر **عرض موقع نقطة الاستلام على الخريطة**:
+    -   يفتح نافذة خريطة بنقطة تحديد موقع المركز.
+
+> صورة:
+> ![نتيجة البحث + طلب استلام](<screenshots/لقطة%20الشاشة%20(686).png>)
+
+---
+
+### 3️⃣ عرض موقع نقطة الاستلام على الخريطة
+
+#### لقطة الشاشة (687)
+
+-   تظهر نافذة (Modal) فيها **Google Maps Embed**.
+-   يتم عرض موقع نقطة الاستلام (مثل: مركز المفقودات – المنطقة المركزية بمكة).
+-   تساعد الحاج/المعتمر للوصول لموقع النقطة بسهولة.
+
+> صورة:
+> ![خريطة موقع نقطة الاستلام](<screenshots/لقطة%20الشاشة%20(687).png>)
+
+---
+
+## 🧑‍💼 واجهة الأدمن / الموظف
+
+### 4️⃣ إضافة نقاط الاستلام
+
+#### لقطة الشاشة (688)
+
+-   نموذج لإضافة **نقطة استلام جديدة** يحتوي على:
+    -   اسم النقطة.
+    -   المدينة.
+    -   العنوان.
+    -   رابط خريطة Google Maps (Embed URL) لعرضها في الواجهة.
+-   أسفل النموذج تظهر جميع **النقاط المسجلة** كبطاقات.
+
+> صورة:
+> ![إضافة نقاط الاستلام](<screenshots/لقطة%20الشاشة%20(688).png>)
+
+---
+
+### 5️⃣ تسجيل واستقبال الأغراض المفقودة
+
+#### لقطة الشاشة (689)
+
+في هذه الشاشة يمكن للأدمن:
+
+-   تسجيل غرض مفقود جديد:
+    -   اختيار نقطة الاستلام.
+    -   اختيار نوع الغرض (مثلاً: حقيبة، هاتف، جواز).
+    -   إدخال عنوان ووصف الغرض.
+    -   ربط رقم الهوية ورقم الجوال بصاحب الغرض (إن وُجد).
+-   عند وجود بيانات تواصل:
+    -   _مستقبلاً:_ عند تسجيل الغرض يتم إرسال **SMS** لصاحب الغرض:
+        -   تخبره بأن غرضه موجود في نقطة معينة.
+
+> صورة:
+> ![تسجيل الأغراض واستقبالها](<screenshots/لقطة%20الشاشة%20(689).png>)
+
+---
+
+### 6️⃣ قائمة الأغراض المفقودة + حالات التسليم
+
+#### لقطة الشاشة (690) و (691)
+
+-   عرض قائمة كاملة لكل الأغراض المسجلة.
+-   لكل غرض تظهر:
+    -   عنوان الغرض.
+    -   وصف مختصر.
+    -   نقطة الاستلام.
+    -   رقم الجوال / الهوية إن وُجدت.
+    -   حالة الغرض:
+        -   **موجود في الفرع**.
+        -   **تم التسليم**.
+-   زر **تحديد كـ تم التسليم**:
+    -   يغيّر حالة الغرض عند استلامه من صاحبه.
+-   في أسفل الشاشة:
+    -   قسم **متابعة طلبات استلام الأغراض**:
+        -   يعرض آخر طلبات الاستلام مع:
+            -   كود الطلب.
+            -   وصف الغرض.
+            -   نقطة الاستلام.
+            -   حالة الطلب (قيد المراجعة / مقبول / مرفوض).
+
+> صور:
+> ![قائمة الأغراض المفقودة](<screenshots/لقطة%20الشاشة%20(690).png>)  
+> ![متابعة تفاصيل الأغراض وطلبات الاستلام](<screenshots/لقطة%20الشاشة%20(691).png>)
+
+---
+
+## 📌 ملاحظات مستقبلية (To-Do)
+
+-   ربط فعلي مع **بوابة SMS**:
+    -   عند تسجيل غرض جديد مع رقم جوال.
+    -   عند إنشاء طلب استلام جديد.
+-   بناء لوحة تحكم كاملة داخل Laravel (Blade أو Vue SPA).
+-   إضافة:
+    -   صلاحيات مستخدمين (موظف – مشرف – مدير عام).
+    -   تقارير إحصائية عن عدد الأغراض والطلبات.
+    -   دعم لغات متعددة (عربي / إنجليزي).
+
+---
